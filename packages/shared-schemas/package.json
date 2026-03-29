@@ -1,0 +1,21 @@
+{
+  "name": "@cafems/shared-schemas",
+  "version": "1.0.0",
+  "description": "Shared validation schemas for CafeMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["validation", "zod", "schemas"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  }
+}
