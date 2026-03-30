@@ -9,7 +9,7 @@ export interface Expense {
   createdAt: string;
 }
 
-export const useExpenses = () => {
+export function useExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,4 +60,4 @@ export const useExpenses = () => {
   }, []);
 
   return { expenses, loading, error, createExpense, updateExpense, deleteExpense, fetchExpenses };
-};
+}

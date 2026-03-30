@@ -40,7 +40,8 @@ export class ProductRepository {
           select: {
             id: true,
             quantity: true,
-            order: {
+            unitPrice: true,
+            session: {
               select: {
                 id: true,
                 status: true,

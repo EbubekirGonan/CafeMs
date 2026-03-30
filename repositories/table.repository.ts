@@ -8,11 +8,15 @@ export class TableRepository {
     return prisma.table.findMany({
       orderBy: { number: 'asc' },
       include: {
-        orders: {
-          where: { status: 'OPEN' },
-          select: {
-            id: true,
-            totalAmount: true,
+        sessions: {
+          include: {
+            items: {
+              include: {
+                product: {
+                  select: { name: true },
+                },
+              },
+            },
           },
         },
       },
@@ -26,8 +30,7 @@ export class TableRepository {
     return prisma.table.findUnique({
       where: { id },
       include: {
-        orders: {
-          where: { status: 'OPEN' },
+        sessions: {
           include: {
             items: {
               include: {
@@ -54,7 +57,7 @@ export class TableRepository {
    * Masanın aktif siparişini getir
    */
   async getActiveOrder(tableId: string) {
-    return prisma.order.findFirst({
+    const session = await prisma.session.findFirst({
       where: {
         tableId,
         status: 'OPEN',
@@ -73,5 +76,6 @@ export class TableRepository {
         },
       },
     });
+    return session;
   }
 }

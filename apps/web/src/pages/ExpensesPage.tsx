@@ -244,7 +244,7 @@ export const ExpensesPage = () => {
           <>
             <Box sx={{ mb: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
               <Typography variant="subtitle2">
-                Toplam Gider: <strong>₺{totalAmount.toFixed(2)}</strong>
+                Toplam Gider: <strong>₺{Number(totalAmount).toFixed(2)}</strong>
               </Typography>
             </Box>
             <TableContainer component={Paper}>
@@ -268,8 +268,8 @@ export const ExpensesPage = () => {
                       <TableCell align="right">
                         {expense.quantity} {expense.unit}
                       </TableCell>
-                      <TableCell align="right">₺{expense.unitPrice.toFixed(2)}</TableCell>
-                      <TableCell align="right">₺{expense.totalAmount.toFixed(2)}</TableCell>
+                      <TableCell align="right">₺{Number(expense.unitPrice).toFixed(2)}</TableCell>
+                      <TableCell align="right">₺{Number(expense.totalAmount).toFixed(2)}</TableCell>
                       <TableCell>{new Date(expense.date).toLocaleDateString('tr-TR')}</TableCell>
                       <TableCell align="center">
                         <IconButton

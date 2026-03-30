@@ -12,74 +12,91 @@ enum TableStatus {
   OCCUPIED
 }
 
-enum OrderStatus {
+enum SessionStatus {
   OPEN
   PAID
 }
 
 model User {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email         String   @unique
-  passwordHash  String   @map("password_hash")
-  name          String
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   @@map("users")
 }
 
 model Product {
-  id        String      @id @default(uuid()) @db.Uuid
-  name      String      @unique
-  price     Decimal     @db.Decimal(10, 2)
-  category  String?
-  isActive  Boolean     @default(true) @map("is_active")
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime    @updatedAt @map("updated_at") @db.Timestamptz
+  id         String      @id @default(uuid()) @db.Uuid
+  name       String      @unique
+  price      Decimal     @db.Decimal(10, 2)
+  category   String?
+  isActive   Boolean     @default(true) @map("is_active")
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
   orderItems OrderItem[]
 
   @@map("products")
 }
 
-model Table {
-  id        String      @id @default(uuid()) @db.Uuid
-  number    Int         @unique
-  capacity  Int?
-  status    TableStatus @default(EMPTY)
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz
-  orders    Order[]
+model VenueSection {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
+  tables Table[]
+
+  @@map("venue_sections")
+}
+
+model Table {
+  id          String      @id @default(uuid()) @db.Uuid
+  number      Int         @unique
+  capacity    Int?
+  status      TableStatus @default(EMPTY)
+  venueSectionId String?   @map("venue_section_id") @db.Uuid
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  sessions    Session[]
+
+  venueSection VenueSection? @relation(fields: [venueSectionId], references: [id], onDelete: SetNull)
+
+  @@index([venueSectionId])
   @@map("tables")
 }
 
-model Order {
-  id            String         @id @default(uuid()) @db.Uuid
-  tableId       String         @map("table_id") @db.Uuid
-  status        OrderStatus    @default(OPEN)
-  openedAt      DateTime       @default(now()) @map("opened_at") @db.Timestamptz
-  closedAt      DateTime?      @map("closed_at") @db.Timestamptz
-  totalAmount   Decimal        @default(0) @map("total_amount") @db.Decimal(10, 2)
-  
-  table         Table          @relation(fields: [tableId], references: [id])
-  items         OrderItem[]
-  revenueRecord RevenueRecord?
+model Session {
+  id          String        @id @default(uuid()) @db.Uuid
+  tableId     String        @map("table_id") @db.Uuid
+  status      SessionStatus @default(OPEN)
+  openedAt    DateTime      @default(now()) @map("opened_at") @db.Timestamptz
+  closedAt    DateTime?     @map("closed_at") @db.Timestamptz
+  totalAmount Decimal       @default(0) @map("total_amount") @db.Decimal(10, 2)
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz
 
-  @@index([tableId, status])
-  @@map("orders")
+  table          Table           @relation(fields: [tableId], references: [id])
+  items          OrderItem[]
+  revenueRecord  RevenueRecord?
+
+  @@index([tableId, closedAt])
+  @@map("sessions")
 }
 
 model OrderItem {
   id        String   @id @default(uuid()) @db.Uuid
-  orderId   String   @map("order_id") @db.Uuid
+  sessionId String   @map("session_id") @db.Uuid
   productId String   @map("product_id") @db.Uuid
   quantity  Int
-  unitPrice Decimal  @map("unit_price") @db.Decimal(10, 2) // Snapshot price
+  unitPrice Decimal  @map("unit_price") @db.Decimal(10, 2)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
-  order     Order    @relation(fields: [orderId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
 
-  @@index([orderId])
+  @@index([sessionId])
   @@map("order_items")
 }
 
@@ -101,12 +118,12 @@ model Expense {
 
 model RevenueRecord {
   id          String   @id @default(uuid()) @db.Uuid
-  orderId     String   @unique @map("order_id") @db.Uuid
+  sessionId   String   @unique @map("session_id") @db.Uuid
   amount      Decimal  @db.Decimal(10, 2)
   revenueDate DateTime @map("revenue_date") @db.Date
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
 
-  order       Order    @relation(fields: [orderId], references: [id])
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@index([revenueDate])
   @@map("revenue_records")

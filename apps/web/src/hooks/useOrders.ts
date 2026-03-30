@@ -19,7 +19,7 @@ export interface Table {
   createdAt: string;
 }
 
-export const useOrders = () => {
+export function useOrders() {
   const [tables, setTables] = useState<Table[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export const useOrders = () => {
 
   const addItemToOrder = async (tableId: string, productId: string, quantity: number) => {
     try {
-      const response = await apiClient.post(`/orders/tables/${tableId}/items`, {
+      const response = await apiClient.post(`/tables/${tableId}/order/items`, {
         productId,
         quantity,
       });
@@ -60,7 +60,7 @@ export const useOrders = () => {
 
   const removeItemFromOrder = async (tableId: string, itemId: string) => {
     try {
-      await apiClient.delete(`/orders/tables/${tableId}/items/${itemId}`);
+      await apiClient.delete(`/tables/${tableId}/order/items/${itemId}`);
     } catch (err: any) {
       throw err;
     }
@@ -68,7 +68,7 @@ export const useOrders = () => {
 
   const checkoutTable = async (tableId: string) => {
     try {
-      const response = await apiClient.post(`/orders/tables/${tableId}/checkout`);
+      const response = await apiClient.post(`/tables/${tableId}/order/checkout`);
       await fetchTables();
       return response.data.data;
     } catch (err: any) {
@@ -90,4 +90,4 @@ export const useOrders = () => {
     checkoutTable,
     fetchTables,
   };
-};
+}

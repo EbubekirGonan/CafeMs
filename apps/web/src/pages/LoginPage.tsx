@@ -9,7 +9,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { useAuthStore } from '../auth/store';
+import { useAuthStore } from '../features/auth/store';
 
 export const LoginPage = () => {
   const navigate = useNavigate();

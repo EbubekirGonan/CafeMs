@@ -100,7 +100,7 @@ export const DashboardPage = () => {
                   </Typography>
                 </Box>
                 <Typography variant="h5">
-                  ₺{metrics?.currentMonthRevenue.toFixed(2)}
+                  ₺{Number(metrics?.currentMonthRevenue).toFixed(2)}
                 </Typography>
               </CardContent>
             </Card>
@@ -117,7 +117,7 @@ export const DashboardPage = () => {
                   </Typography>
                 </Box>
                 <Typography variant="h5">
-                  ₺{metrics?.currentMonthExpenses.toFixed(2)}
+                  ₺{Number(metrics?.currentMonthExpenses).toFixed(2)}
                 </Typography>
               </CardContent>
             </Card>
@@ -147,7 +147,7 @@ export const DashboardPage = () => {
                     color: metrics?.isProfit ? '#2e7d32' : '#c62828',
                   }}
                 >
-                  ₺{metrics?.netProfit.toFixed(2)}
+                  ₺{Number(metrics?.netProfit).toFixed(2)}
                 </Typography>
               </CardContent>
             </Card>

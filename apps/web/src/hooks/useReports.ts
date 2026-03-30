@@ -10,7 +10,7 @@ export interface MonthlyReport {
   tableCount: number;
 }
 
-export const useReports = () => {
+export function useReports() {
   const [report, setReport] = useState<MonthlyReport | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,4 +35,4 @@ export const useReports = () => {
   }, []);
 
   return { report, loading, error, fetchMonthlyReport };
-};
+}

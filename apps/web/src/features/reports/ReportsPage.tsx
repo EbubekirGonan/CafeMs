@@ -12,7 +12,7 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
-import { useReports } from '../hooks/useReports';
+import { useReports } from '../../hooks';
 
 export const ReportsPage = () => {
   const { report, loading, error, fetchMonthlyReport } = useReports();

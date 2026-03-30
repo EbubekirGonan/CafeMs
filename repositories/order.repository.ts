@@ -8,24 +8,19 @@ export interface AddOrderItemInput {
 
 export class OrderRepository {
   /**
-   * Siparişi ID'ye göre getir
+   * SessionID'ye göre tüm öğeleri getir (replace for order items in session)
    */
-  async findById(id: string) {
-    return prisma.order.findUnique({
-      where: { id },
+  async findBySessionId(sessionId: string) {
+    return prisma.orderItem.findMany({
+      where: { sessionId },
       include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                price: true,
-              },
-            },
+        product: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
           },
         },
-        table: true,
       },
     });
   }
@@ -33,10 +28,10 @@ export class OrderRepository {
   /**
    * Ürün ekle (FR-06)
    */
-  async addItem(orderId: string, productId: string, quantity: number, unitPrice: Decimal) {
+  async addItem(sessionId: string, productId: string, quantity: number, unitPrice: Decimal) {
     return prisma.orderItem.create({
       data: {
-        orderId,
+        sessionId,
         productId,
         quantity,
         unitPrice,
@@ -57,22 +52,24 @@ export class OrderRepository {
   }
 
   /**
-   * Siparişin kalan kalem sayısını getir
+   * Mevcut kalemin quantity'sini güncelle
    */
-  async getItemCount(orderId: string): Promise<number> {
-    return prisma.orderItem.count({
-      where: { orderId },
+  async updateItemQuantity(itemId: string, quantity: number) {
+    return prisma.orderItem.update({
+      where: { id: itemId },
+      data: { quantity },
+      include: {
+        product: true,
+      },
     });
   }
 
   /**
-   * Sipariş oluştur
+   * SessionID'deki kalem sayısını getir
    */
-  async create(tableId: string) {
-    return prisma.order.create({
-      data: {
-        tableId,
-      },
+  async getItemCount(sessionId: string): Promise<number> {
+    return prisma.orderItem.count({
+      where: { sessionId },
     });
   }
 
@@ -89,7 +86,7 @@ export class OrderRepository {
       return sum.plus(item.unitPrice.mul(item.quantity));
     }, new Decimal(0));
 
-    // 2. Transaction: Order + Revenue Record + Table status
+    // 2. Transaction: Order + Revenue Record + Session total
     const result = await prisma.$transaction(async (tx) => {
       // Order durumunu güncelle
       const order = await tx.order.update({
@@ -99,7 +96,7 @@ export class OrderRepository {
           closedAt: new Date(),
           totalAmount,
         },
-        include: { table: true },
+        include: { session: true },
       });
 
       // Revenue record oluştur
@@ -111,10 +108,18 @@ export class OrderRepository {
         },
       });
 
-      // Masayı boşal
-      await tx.table.update({
-        where: { id: order.tableId },
-        data: { status: 'EMPTY' },
+      // Session toplam tutarını güncelle
+      const sessionOrders = await tx.order.findMany({
+        where: { sessionId: order.sessionId },
+      });
+
+      const sessionTotal = sessionOrders.reduce((sum, o) => {
+        return sum.plus(o.totalAmount);
+      }, new Decimal(0));
+
+      await tx.session.update({
+        where: { id: order.sessionId },
+        data: { totalAmount: sessionTotal },
       });
 
       return { order, revenueRecord };
@@ -134,5 +139,74 @@ export class OrderRepository {
     return items.reduce((sum, item) => {
       return sum.plus(item.unitPrice.mul(item.quantity));
     }, new Decimal(0));
+  }
+
+  /**
+   * Ürünlerle birlikte sipariş oluştur (batch)
+   */
+  async createWithItems(
+    sessionId: string,
+    items: Array<{ productId: string; quantity: number; unitPrice: Decimal }>
+  ) {
+    return prisma.$transaction(async (tx) => {
+      // Order oluştur
+      const order = await tx.order.create({
+        data: { sessionId },
+      });
+
+      // Tüm items'i oluştur
+      const createdItems = await Promise.all(
+        items.map((item) =>
+          tx.orderItem.create({
+            data: {
+              orderId: order.id,
+              productId: item.productId,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+            },
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                },
+              },
+            },
+          })
+        )
+      );
+
+      // Toplam tutarı hesapla
+      const totalAmount = items.reduce((sum, item) => {
+        return sum.plus(item.unitPrice.mul(item.quantity));
+      }, new Decimal(0));
+
+      // Order'ı güncelle (totalAmount)
+      const updatedOrder = await tx.order.update({
+        where: { id: order.id },
+        data: { totalAmount },
+        include: {
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                },
+              },
+            },
+          },
+          session: true,
+        },
+      });
+
+      return {
+        order: updatedOrder,
+        items: createdItems,
+        totalAmount,
+      };
+    });
   }
 }

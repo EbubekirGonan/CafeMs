@@ -152,7 +152,7 @@ export const ProductsPage = () => {
                 {products.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell align="right">₺{product.price.toFixed(2)}</TableCell>
+                    <TableCell align="right">₺{Number(product.price).toFixed(2)}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell align="center">
                       <Chip

@@ -14,6 +14,9 @@ router.get('/:id', tableController.getTable);
 router.get('/:id/order', tableController.getTableActiveOrder);
 
 // Order item endpoints (FR-06, FR-07)
+router.post('/:tableId/order/create-with-items', orderController.createOrderWithItems);
 router.post('/:tableId/order/items', orderController.addOrderItem);
+router.delete('/:tableId/order/items/:itemId', orderController.removeOrderItem);
+router.post('/:tableId/order/checkout', orderController.checkoutOrder);
 
 export default router;

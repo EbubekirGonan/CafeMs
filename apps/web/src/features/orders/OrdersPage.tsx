@@ -25,8 +25,7 @@ import {
   Chip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useOrders, Table as TableType } from '../hooks/useOrders';
-import { useProducts } from '../hooks/useProducts';
+import { useOrders, useProducts, type Table as CafeTable } from '../../hooks';
 
 export const OrdersPage = () => {
   const { tables, loading, error, addItemToOrder, removeItemFromOrder, checkoutTable, fetchTables } =

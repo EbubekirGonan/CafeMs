@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import apiClient from '../api';
+import apiClient from '../../lib/api';
 
 interface User {
   userId: string;

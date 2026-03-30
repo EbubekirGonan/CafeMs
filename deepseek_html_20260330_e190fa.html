@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kafe Masa Düzeni Yönetim Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        /* Ana içerik */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #ecf0f1;
+        }
+
+        /* Salonlar listesi (sol panel) */
+        .salons-panel {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .salons-panel h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .salon-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .salon-item {
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid transparent;
+        }
+
+        .salon-item:hover {
+            background: #e9ecef;
+        }
+
+        .salon-item.active {
+            background: #e3f2fd;
+            border-left-color: #3498db;
+        }
+
+        .salon-name {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .salon-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .add-salon-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .add-salon-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        /* Masa düzeni alanı (sağ panel) */
+        .layout-panel {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .layout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .current-salon-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .table-grid {
+            background: #f8f9fa;
+            min-height: 500px;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            width: 140px;
+            cursor: move;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+            border: 2px solid #3498db;
+            user-select: none;
+        }
+
+        .table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .table-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .table-capacity {
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .table-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .table-card.dragging {
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .empty-layout {
+            text-align: center;
+            padding: 60px;
+            color: #95a5a6;
+            width: 100%;
+        }
+
+        /* Draggable */
+        .table-grid.drag-over {
+            background: #e8f4f8;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .salons-panel {
+                width: 100%;
+            }
+            .table-card {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>☕ Kafe Masa Düzeni Yöneticisi</h1>
+        <div>
+            <button class="btn btn-primary" onclick="exportData()">💾 Verileri Dışa Aktar</button>
+            <button class="btn btn-success" onclick="importData()">📂 Veri Yükle</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <!-- Sol Panel: Salon Yönetimi -->
+        <div class="salons-panel">
+            <h3>
+                🏠 Salonlarım
+                <button class="btn btn-primary" style="padding: 5px 12px;" onclick="showAddSalonModal()">+ Yeni Salon</button>
+            </h3>
+            <div id="salonListContainer" class="salon-list">
+                <!-- Salonlar dinamik olarak listelenecek -->
+            </div>
+            <div class="add-salon-form" style="display: none;">
+                <!-- Yedek, modal kullanıyoruz -->
+            </div>
+        </div>
+
+        <!-- Sağ Panel: Masa Düzeni -->
+        <div class="layout-panel">
+            <div class="layout-header">
+                <div class="current-salon-info">
+                    <span id="currentSalonName">Salon seçilmedi</span>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="showAddTableModal()">➕ Masa Ekle</button>
+                    <button class="btn btn-warning" onclick="clearCurrentSalonTables()" style="margin-left: 5px;">🗑️ Tüm Masaları Temizle</button>
+                </div>
+            </div>
+            <div id="tableGrid" class="table-grid" ondragover="allowDrop(event)" ondrop="dropTable(event)">
+                <div class="empty-layout">Masa eklemek için "Masa Ekle" butonuna tıklayın</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Yeni Salon Ekle -->
+<div id="salonModal" class="modal">
+    <div class="modal-content">
+        <h3>Yeni Salon Ekle</h3>
+        <input type="text" id="salonNameInput" placeholder="Salon adı (örn: Bahçe, Giriş, Ara Bölüm)" autocomplete="off">
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="addSalon()">Ekle</button>
+            <button class="btn btn-danger" onclick="closeModal('salonModal')">İptal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Masa Ekle / Düzenle -->
+<div id="tableModal" class="modal">
+    <div class="modal-content">
+        <h3 id="tableModalTitle">Masa Ekle</h3>
+        <input type="number" id="tableNumber" placeholder="Masa Numarası" autocomplete="off">
+        <input type="number" id="tableCapacity" placeholder="Kapasite (Kişi Sayısı)" value="4">
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="saveTable()">Kaydet</button>
+            <button class="btn btn-danger" onclick="closeModal('tableModal')">İptal</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Veri Modeli
+    let salons = []; // { id, name, tables: [] } tables: { id, number, capacity, x, y (position için opsiyonel) }
+    let currentSalonId = null;
+    let editingTableId = null;
+    let draggedTableId = null;
+    let draggedSalonId = null;
+
+    // Yardımcı ID üreteci
+    function generateId() {
+        return Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+    }
+
+    // Başlangıç verileri (örnek)
+    function initSampleData() {
+        const sampleSalons = [
+            { id: generateId(), name: "🌿 Bahçe", tables: [] },
+            { id: generateId(), name: "🚪 Giriş", tables: [] },
+            { id: generateId(), name: "🛋️ Ara Bölüm", tables: [] }
+        ];
+        
+        // Bahçe masaları
+        sampleSalons[0].tables = [
+            { id: generateId(), number: 1, capacity: 4, x: 20, y: 50 },
+            { id: generateId(), number: 2, capacity: 6, x: 200, y: 50 },
+            { id: generateId(), number: 3, capacity: 2, x: 380, y: 50 }
+        ];
+        // Giriş masaları
+        sampleSalons[1].tables = [
+            { id: generateId(), number: 101, capacity: 4, x: 30, y: 30 },
+            { id: generateId(), number: 102, capacity: 4, x: 200, y: 30 }
+        ];
+        // Ara Bölüm masaları
+        sampleSalons[2].tables = [
+            { id: generateId(), number: 201, capacity: 6, x: 50, y: 40 },
+            { id: generateId(), number: 202, capacity: 8, x: 250, y: 40 }
+        ];
+        
+        salons = sampleSalons;
+        currentSalonId = salons[0].id;
+    }
+
+    // LocalStorage'dan yükle
+    function loadFromStorage() {
+        const saved = localStorage.getItem('kafe_masa_duzeni');
+        if (saved) {
+            try {
+                salons = JSON.parse(saved);
+                if (salons && salons.length > 0 && !currentSalonId) {
+                    currentSalonId = salons[0].id;
+                } else if (!salons || salons.length === 0) {
+                    initSampleData();
+                }
+            } catch(e) { initSampleData(); }
+        } else {
+            initSampleData();
+        }
+        if (currentSalonId === null && salons.length > 0) currentSalonId = salons[0].id;
+        renderAll();
+    }
+
+    // Veriyi kaydet
+    function saveToStorage() {
+        localStorage.setItem('kafe_masa_duzeni', JSON.stringify(salons));
+    }
+
+    // Dışa aktar
+    function exportData() {
+        const dataStr = JSON.stringify(salons, null, 2);
+        const blob = new Blob([dataStr], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `kafe_masa_duzeni_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert("Veriler başarıyla dışa aktarıldı!");
+    }
+
+    function importData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                try {
+                    const imported = JSON.parse(ev.target.result);
+                    if (Array.isArray(imported)) {
+                        salons = imported;
+                        if (salons.length > 0) currentSalonId = salons[0].id;
+                        else currentSalonId = null;
+                        saveToStorage();
+                        renderAll();
+                        alert("Veriler başarıyla içe aktarıldı!");
+                    } else throw new Error();
+                } catch(err) {
+                    alert("Geçersiz dosya formatı!");
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
+
+    // Salonları listele
+    function renderSalons() {
+        const container = document.getElementById('salonListContainer');
+        if (!container) return;
+        if (salons.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#999;">Henüz salon yok.<br>Yeni salon ekleyin.</div>';
+            return;
+        }
+        container.innerHTML = salons.map(salon => `
+            <div class="salon-item ${currentSalonId === salon.id ? 'active' : ''}" onclick="selectSalon('${salon.id}')">
+                <span class="salon-name">${escapeHtml(salon.name)}</span>
+                <div class="salon-actions">
+                    <button class="icon-btn" onclick="event.stopPropagation(); editSalonName('${salon.id}')" title="Düzenle">✏️</button>
+                    <button class="icon-btn" onclick="event.stopPropagation(); deleteSalon('${salon.id}')" title="Sil">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Masa düzenini render et (flex tabanlı)
+    function renderTables() {
+        const grid = document.getElementById('tableGrid');
+        if (!grid) return;
+        const currentSalon = salons.find(s => s.id === currentSalonId);
+        if (!currentSalon) {
+            grid.innerHTML = '<div class="empty-layout">Lütfen soldan bir salon seçin</div>';
+            document.getElementById('currentSalonName').innerText = 'Salon seçilmedi';
+            return;
+        }
+        document.getElementById('currentSalonName').innerHTML = `📍 ${escapeHtml(currentSalon.name)} (${currentSalon.tables.length} masa)`;
+        
+        if (currentSalon.tables.length === 0) {
+            grid.innerHTML = '<div class="empty-layout">Bu salonda henüz masa yok. "Masa Ekle" butonuna tıklayın.</div>';
+            return;
+        }
+        
+        grid.innerHTML = currentSalon.tables.map(table => `
+            <div class="table-card" draggable="true" data-table-id="${table.id}" 
+                 ondragstart="dragTableStart(event)" ondragend="dragTableEnd(event)">
+                <div class="table-number">Masa ${table.number}</div>
+                <div class="table-capacity">👥 ${table.capacity} kişi</div>
+                <div class="table-actions">
+                    <button class="icon-btn" onclick="editTable('${table.id}')" title="Düzenle">✏️</button>
+                    <button class="icon-btn" onclick="deleteTable('${table.id}')" title="Sil">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Drag & Drop işlemleri
+    function dragTableStart(event) {
+        const target = event.target.closest('.table-card');
+        if (!target) return;
+        draggedTableId = target.getAttribute('data-table-id');
+        event.dataTransfer.setData("text/plain", draggedTableId);
+        event.dataTransfer.effectAllowed = "move";
+        target.classList.add('dragging');
+    }
+    
+    function dragTableEnd(event) {
+        const target = event.target.closest('.table-card');
+        if (target) target.classList.remove('dragging');
+        draggedTableId = null;
+    }
+    
+    function allowDrop(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+    }
+    
+    function dropTable(event) {
+        event.preventDefault();
+        const targetGrid = event.currentTarget;
+        if (!draggedTableId) return;
+        // Drag & drop ile pozisyon değiştirme (basitçe masaların sırasını değiştirelim)
+        const currentSalon = salons.find(s => s.id === currentSalonId);
+        if (!currentSalon) return;
+        const draggedIndex = currentSalon.tables.findIndex(t => t.id === draggedTableId);
+        if (draggedIndex === -1) return;
+        
+        // Drop hedefi masa kartı mı? Eğer masa üzerine bırakılırsa sıralama değişimi yapalım.
+        const targetCard = event.target.closest('.table-card');
+        if (targetCard) {
+            const targetTableId = targetCard.getAttribute('data-table-id');
+            const targetIndex = currentSalon.tables.findIndex(t => t.id === targetTableId);
+            if (targetIndex !== -1 && draggedIndex !== targetIndex) {
+                // Sıraları değiştir
+                const [movedTable] = currentSalon.tables.splice(draggedIndex, 1);
+                currentSalon.tables.splice(targetIndex, 0, movedTable);
+                saveToStorage();
+                renderTables();
+            }
+        } else {
+            // Boş alana bırakıldığında herhangi bir işlem yapmıyoruz (isteğe bağlı)
+        }
+        draggedTableId = null;
+    }
+
+    // Salon seç
+    function selectSalon(salonId) {
+        currentSalonId = salonId;
+        renderSalons();
+        renderTables();
+        saveToStorage();
+    }
+
+    // Salon ekleme modal
+    function showAddSalonModal() {
+        document.getElementById('salonNameInput').value = '';
+        document.getElementById('salonModal').style.display = 'flex';
+    }
+    
+    function addSalon() {
+        const nameInput = document.getElementById('salonNameInput');
+        const name = nameInput.value.trim();
+        if (!name) {
+            alert("Salon adı giriniz!");
+            return;
+        }
+        const newSalon = {
+            id: generateId(),
+            name: name,
+            tables: []
+        };
+        salons.push(newSalon);
+        if (!currentSalonId) currentSalonId = newSalon.id;
+        saveToStorage();
+        renderSalons();
+        if (currentSalonId === newSalon.id) renderTables();
+        closeModal('salonModal');
+    }
+    
+    function editSalonName(salonId) {
+        const salon = salons.find(s => s.id === salonId);
+        if (!salon) return;
+        const newName = prompt("Salon adını düzenle:", salon.name);
+        if (newName && newName.trim()) {
+            salon.name = newName.trim();
+            saveToStorage();
+            renderSalons();
+            if (currentSalonId === salonId) renderTables();
+        }
+    }
+    
+    function deleteSalon(salonId) {
+        if (salons.length === 1) {
+            alert("En az bir salon bulunmalıdır. Silmek için önce yeni salon ekleyin.");
+            return;
+        }
+        if (confirm("Bu salonu ve içindeki tüm masaları silmek istediğinize emin misiniz?")) {
+            const index = salons.findIndex(s => s.id === salonId);
+            if (index !== -1) {
+                salons.splice(index, 1);
+                if (currentSalonId === salonId) {
+                    currentSalonId = salons[0]?.id || null;
+                }
+                saveToStorage();
+                renderSalons();
+                renderTables();
+            }
+        }
+    }
+    
+    // Masa işlemleri
+    function showAddTableModal() {
+        if (!currentSalonId) {
+            alert("Lütfen önce bir salon seçin!");
+            return;
+        }
+        editingTableId = null;
+        document.getElementById('tableModalTitle').innerText = "Yeni Masa Ekle";
+        document.getElementById('tableNumber').value = '';
+        document.getElementById('tableCapacity').value = '4';
+        document.getElementById('tableModal').style.display = 'flex';
+    }
+    
+    function editTable(tableId) {
+        const salon = salons.find(s => s.id === currentSalonId);
+        if (!salon) return;
+        const table = salon.tables.find(t => t.id === tableId);
+        if (!table) return;
+        editingTableId = tableId;
+        document.getElementById('tableModalTitle').innerText = "Masayı Düzenle";
+        document.getElementById('tableNumber').value = table.number;
+        document.getElementById('tableCapacity').value = table.capacity;
+        document.getElementById('tableModal').style.display = 'flex';
+    }
+    
+    function saveTable() {
+        const numberInput = document.getElementById('tableNumber');
+        const capacityInput = document.getElementById('tableCapacity');
+        const number = parseInt(numberInput.value);
+        const capacity = parseInt(capacityInput.value);
+        if (isNaN(number) || number <= 0) {
+            alert("Geçerli bir masa numarası giriniz!");
+            return;
+        }
+        if (isNaN(capacity) || capacity < 1) {
+            alert("Geçerli bir kapasite giriniz!");
+            return;
+        }
+        
+        const salon = salons.find(s => s.id === currentSalonId);
+        if (!salon) return;
+        
+        if (editingTableId) {
+            // Düzenleme
+            const table = salon.tables.find(t => t.id === editingTableId);
+            if (table) {
+                // Aynı numarada başka masa var mı kontrolü
+                const existsOther = salon.tables.some(t => t.id !== editingTableId && t.number === number);
+                if (existsOther) {
+                    alert("Bu masa numarası zaten mevcut!");
+                    return;
+                }
+                table.number = number;
+                table.capacity = capacity;
+            }
+        } else {
+            // Yeni masa ekle
+            const exists = salon.tables.some(t => t.number === number);
+            if (exists) {
+                alert("Bu masa numarası zaten mevcut!");
+                return;
+            }
+            const newTable = {
+                id: generateId(),
+                number: number,
+                capacity: capacity,
+                x: 0, y: 0
+            };
+            salon.tables.push(newTable);
+        }
+        saveToStorage();
+        renderTables();
+        closeModal('tableModal');
+        editingTableId = null;
+    }
+    
+    function deleteTable(tableId) {
+        if (confirm("Bu masayı silmek istediğinize emin misiniz?")) {
+            const salon = salons.find(s => s.id === currentSalonId);
+            if (salon) {
+                salon.tables = salon.tables.filter(t => t.id !== tableId);
+                saveToStorage();
+                renderTables();
+            }
+        }
+    }
+    
+    function clearCurrentSalonTables() {
+        if (!currentSalonId) return;
+        if (confirm("Bu salondaki tüm masaları silmek istediğinize emin misiniz?")) {
+            const salon = salons.find(s => s.id === currentSalonId);
+            if (salon) {
+                salon.tables = [];
+                saveToStorage();
+                renderTables();
+            }
+        }
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        editingTableId = null;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function renderAll() {
+        renderSalons();
+        renderTables();
+    }
+    
+    // Modal dışına tıklayınca kapatma
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+            editingTableId = null;
+        }
+    }
+    
+    // Başlat
+    loadFromStorage();
+</script>
+</body>
+</html>

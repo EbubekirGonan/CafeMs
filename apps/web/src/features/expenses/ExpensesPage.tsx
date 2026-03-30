@@ -21,7 +21,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useExpenses, Expense } from '../hooks/useExpenses';
+import { useExpenses, type Expense } from '../../hooks';
 
 const CATEGORIES = ['Supplies', 'Utilities', 'Maintenance', 'Staff', 'Other'];
 

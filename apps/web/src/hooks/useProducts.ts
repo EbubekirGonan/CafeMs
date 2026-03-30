@@ -10,7 +10,7 @@ export interface Product {
   createdAt: string;
 }
 
-export const useProducts = () => {
+export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,4 +61,4 @@ export const useProducts = () => {
   }, []);
 
   return { products, loading, error, createProduct, updateProduct, deleteProduct, fetchProducts };
-};
+}

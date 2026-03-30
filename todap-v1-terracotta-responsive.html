@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TODAP — Toplumsal Dayanışma İçin Psikologlar Derneği</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --clay:#c4522a;
+  --clay-deep:#8b3518;
+  --clay-light:#f5e8e1;
+  --clay-pale:#fdf6f2;
+  --sand:#e8d5b7;
+  --sand-deep:#c4a882;
+  --ink:#1c1410;
+  --ink-muted:#5c4a3a;
+  --ink-faint:#9a8070;
+  --bg:#fdf6f2;
+  --border:rgba(28,20,16,0.10);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'IBM Plex Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(253,246,242,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--clay);text-decoration:none;letter-spacing:-0.01em}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:13px;font-weight:400;color:var(--ink-muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.btn-nav{font-family:var(--font-body);font-size:13px;font-weight:500;padding:7px 18px;border-radius:4px;background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;border:1px solid var(--border);transition:all .2s}
+.btn-nav:hover{background:var(--ink);color:var(--bg)}
+.btn-nav.primary{background:var(--clay);color:#fff;border-color:var(--clay)}
+.btn-nav.primary:hover{background:var(--clay-deep)}
+
+/* HERO */
+.hero-wrap{background:var(--clay);position:relative;overflow:hidden;padding:5rem 2.5rem 4rem}
+.hero-wrap::before{content:'';position:absolute;top:-60px;right:-80px;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.hero-wrap::after{content:'';position:absolute;bottom:-100px;left:20%;width:360px;height:360px;border-radius:50%;background:rgba(0,0,0,0.08);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 340px;gap:4rem;align-items:center}
+.hero-tag{display:inline-block;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.25);padding-bottom:0.5rem}
+.hero h1{font-family:var(--font-display);font-size:clamp(38px,5.5vw,68px);font-weight:700;line-height:1.05;letter-spacing:-0.02em;color:#fff;margin-bottom:1.5rem}
+.hero h1 em{font-style:italic;font-weight:400;opacity:0.85}
+.hero-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,0.75);max-width:500px;line-height:1.65;margin-bottom:2.5rem}
+.btn-white{display:inline-block;font-family:var(--font-body);font-size:14px;font-weight:500;padding:12px 26px;border-radius:4px;background:#fff;color:var(--clay);text-decoration:none;border:none;cursor:pointer;transition:all .2s;margin-right:10px}
+.btn-white:hover{background:var(--clay-light);color:var(--clay-deep)}
+.btn-outline-white{display:inline-block;font-family:var(--font-body);font-size:14px;font-weight:500;padding:12px 26px;border-radius:4px;background:transparent;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.4);cursor:pointer;transition:all .2s}
+.btn-outline-white:hover{background:rgba(255,255,255,0.1)}
+.hero-card{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:1.75rem;backdrop-filter:blur(8px)}
+.hero-card-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1rem}
+.hero-card-item{padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:opacity .2s}
+.hero-card-item:last-child{border-bottom:none;padding-bottom:0}
+.hero-card-item:hover{opacity:0.7}
+.hero-card-date{font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:3px}
+.hero-card-title{font-size:13px;color:#fff;font-weight:400;line-height:1.4}
+
+/* TICKER */
+.ticker-wrap{background:var(--clay-deep);overflow:hidden;white-space:nowrap;padding:10px 0}
+.ticker-inner{display:inline-block;animation:ticker 40s linear infinite}
+.ticker-inner span{font-size:12px;color:rgba(255,255,255,0.7);margin-right:3rem}
+.ticker-inner span strong{color:#fff;font-weight:500}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:5rem 2.5rem}
+.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--clay);display:block;margin-bottom:0.75rem}
+h2.display{font-family:var(--font-display);font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-0.02em;line-height:1.15;color:var(--ink);margin-bottom:0}
+h2.display em{font-style:italic;font-weight:400;color:var(--clay)}
+
+/* HABERLER */
+.news-layout{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:2.5rem}
+.news-big{background:var(--bg);padding:2.5rem;grid-column:span 2}
+.news-big-date{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.75rem}
+.news-tag{display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:2px;background:var(--clay);color:#fff;letter-spacing:0.04em;text-transform:uppercase;margin-right:6px;margin-bottom:0.75rem}
+.news-tag.yellow{background:#d4a017}
+.news-tag.green{background:#3a6b35}
+.news-big h3{font-family:var(--font-display);font-size:28px;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:1rem;max-width:700px}
+.news-big p{font-size:15px;color:var(--ink-muted);max-width:650px;line-height:1.7;margin-bottom:1.25rem}
+.news-small{background:var(--bg);padding:1.75rem}
+.news-small:nth-child(even){background:#fdf0e8}
+.news-small h4{font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:0.5rem}
+.news-small p{font-size:13px;color:var(--ink-muted);line-height:1.6}
+.news-small-date{font-size:11px;color:var(--ink-faint);margin-bottom:0.5rem;letter-spacing:0.04em}
+.read-more{font-size:13px;font-weight:500;color:var(--clay);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:0.75rem}
+.read-more::after{content:'→'}
+.read-more:hover{text-decoration:underline}
+
+/* BIRIMLER */
+.birimler-wrap{background:var(--sand);border-radius:16px;padding:3rem;margin-top:2.5rem}
+.birimler-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem}
+.birim-card{background:var(--bg);border-radius:8px;padding:1.75rem;border:1px solid rgba(196,82,42,0.12)}
+.birim-num{font-family:var(--font-display);font-size:44px;font-style:italic;color:var(--clay);opacity:0.25;line-height:1;margin-bottom:0.75rem;display:block}
+.birim-card h3{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:0.5rem}
+.birim-card p{font-size:13px;color:var(--ink-muted);line-height:1.6}
+
+/* ETKINLIKLER */
+.etkinlik-list{margin-top:2rem}
+.etkinlik-item{display:grid;grid-template-columns:90px 1fr auto;gap:1.5rem;align-items:start;padding:1.5rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:opacity .2s}
+.etkinlik-item:hover{opacity:0.65}
+.etkinlik-item:first-child{border-top:1px solid var(--border)}
+.etk-date{text-align:center;background:var(--clay-light);border-radius:8px;padding:0.75rem 0.5rem}
+.etk-day{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--clay);line-height:1}
+.etk-month{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--clay);opacity:0.7;margin-top:2px}
+.etk-cat{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--clay);margin-bottom:4px}
+.etk-title{font-size:15px;font-weight:400;color:var(--ink);line-height:1.45}
+.etk-arrow{color:var(--ink-faint);font-size:20px;align-self:center}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:2rem}
+.stat-cell{background:var(--clay-pale);padding:2rem;text-align:center}
+.stat-cell:nth-child(2){background:var(--clay-light)}
+.stat-cell:nth-child(4){background:var(--clay-light)}
+.stat-n{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--clay);line-height:1;display:block}
+.stat-l{font-size:12px;color:var(--ink-faint);margin-top:6px}
+
+/* YAYINLAR */
+.pub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:2rem}
+.pub-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.75rem;text-decoration:none;color:inherit;display:block;transition:all .2s}
+.pub-card:hover{border-color:var(--clay);background:var(--clay-pale)}
+.pub-tag{display:inline-block;font-size:10px;font-weight:500;padding:3px 8px;border-radius:2px;background:var(--clay-light);color:var(--clay);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:1rem}
+.pub-card h3{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:0.5rem;line-height:1.35}
+.pub-card p{font-size:13px;color:var(--ink-muted);line-height:1.6}
+
+/* CTA */
+.cta-section{background:var(--clay);border-radius:16px;padding:4rem 3rem;display:grid;grid-template-columns:1fr auto;align-items:center;gap:3rem}
+.cta-section h2{font-family:var(--font-display);font-size:clamp(22px,3vw,36px);font-weight:700;color:#fff;line-height:1.2}
+.cta-section h2 em{font-style:italic;font-weight:400;opacity:0.8}
+.cta-section p{font-size:15px;color:rgba(255,255,255,0.7);margin-top:0.75rem}
+.cta-btns{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:3.5rem 2.5rem 2rem;background:var(--ink)}
+.footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:3rem}
+.footer-logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--clay);display:block;margin-bottom:0.75rem}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6}
+.footer-col h4{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:0.5rem}
+.footer-col a{font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{max-width:1100px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.25)}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:200}
+.hamburger span{display:block;width:24px;height:2px;background:var(--clay);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.mobile-menu{display:none;position:fixed;top:62px;left:0;right:0;bottom:0;background:var(--bg);z-index:150;padding:2rem 1.5rem;overflow-y:auto;flex-direction:column;gap:0}
+.mobile-menu.open{display:flex}
+.mobile-menu a{display:block;padding:1rem 0;font-size:18px;font-weight:400;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s}
+.mobile-menu a:hover{color:var(--clay)}
+.mobile-menu .mob-actions{display:flex;flex-direction:column;gap:10px;margin-top:2rem}
+.mobile-menu .mob-actions a{border-bottom:none;font-size:15px;text-align:center;padding:14px;border-radius:4px}
+.mobile-menu .mob-actions .btn-nav{border:1px solid var(--border)}
+.mobile-menu .mob-actions .btn-nav.primary{background:var(--clay);color:#fff;border-color:var(--clay)}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:0 1.25rem}
+  .nav-links{display:none}
+  .nav-actions{display:none}
+  .hamburger{display:flex}
+
+  .hero-wrap{padding:3rem 1.25rem 2.5rem}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-card{display:none}
+  .hero h1{font-size:clamp(36px,10vw,52px)}
+  .hero-sub{font-size:15px}
+  .btn-white,.btn-outline-white{display:block;text-align:center;margin-right:0;margin-bottom:10px}
+
+  section{padding:3rem 1.25rem}
+
+  .news-layout{grid-template-columns:1fr}
+  .news-big{grid-column:auto;padding:1.5rem}
+  .news-big h3{font-size:20px}
+  .news-small{padding:1.25rem}
+
+  .birimler-wrap{padding:1.5rem}
+  .birimler-grid{grid-template-columns:1fr;gap:1rem}
+
+  .etkinlik-item{grid-template-columns:72px 1fr;gap:1rem;padding:1.25rem 0}
+  .etk-arrow{display:none}
+  .etk-day{font-size:22px}
+
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat-cell{padding:1.5rem 1rem}
+  .stat-n{font-size:36px}
+
+  .pub-grid{grid-template-columns:1fr}
+
+  .cta-section{grid-template-columns:1fr;text-align:center;padding:2.5rem 1.5rem}
+  .cta-btns{align-items:center}
+  .cta-btns .btn-white,.cta-btns .btn-outline-white{display:block;text-align:center;margin-right:0}
+
+  .footer-inner{grid-template-columns:1fr;gap:2rem}
+  .footer-col{border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem}
+  .footer-bottom{flex-direction:column;gap:6px;text-align:center}
+}
+
+@media(max-width:400px){
+  .stats-row{grid-template-columns:1fr}
+  .hero h1{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">TODAP</a>
+  <ul class="nav-links">
+    <li><a href="#hakkinda">Hakkımızda</a></li>
+    <li><a href="#birimler">Birimler</a></li>
+    <li><a href="#haberler">Haberler</a></li>
+    <li><a href="#yayinlar">Yayınlar</a></li>
+    <li><a href="#etkinlikler">Etkinlikler</a></li>
+    <li><a href="#iletisim">İletişim</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-nav" href="#">EN</a>
+    <a class="btn-nav primary" href="#">Üye Ol</a>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#hakkinda" onclick="closeMenu()">Hakkımızda</a>
+  <a href="#birimler" onclick="closeMenu()">Birimler</a>
+  <a href="#haberler" onclick="closeMenu()">Haberler</a>
+  <a href="#yayinlar" onclick="closeMenu()">Yayınlar</a>
+  <a href="#etkinlikler" onclick="closeMenu()">Etkinlikler</a>
+  <a href="#iletisim" onclick="closeMenu()">İletişim</a>
+  <div class="mob-actions">
+    <a class="btn-nav" href="#">EN</a>
+    <a class="btn-nav primary" href="#">Üye Ol</a>
+  </div>
+</div>
+
+<div class="hero-wrap">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-tag">Toplumsal Dayanışma İçin Psikologlar Derneği · Türkiye</span>
+      <h1>Psikoloji<br><em>emekten,</em><br>dayanışmadan</h1>
+      <p class="hero-sub">Toplumcu psikologlar olarak mesleği yalnızca bireysel değil, toplumsal bir sorumluluk olarak görüyoruz. Burada olmak bir tercih değil, bir tutum.</p>
+      <a class="btn-white" href="#">Üyelik Başvurusu</a>
+      <a class="btn-outline-white" href="#hakkinda">Daha Fazla</a>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-label">Son Açıklamalar</div>
+      <div class="hero-card-item">
+        <div class="hero-card-date">23 Aralık 2025</div>
+        <div class="hero-card-title">11. Yargı Paketi Taslağı Psikologları Nasıl Etkiliyor?</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-date">29 Ekim 2025</div>
+        <div class="hero-card-title">LGBTİ+ Haklarına Karşı Artan Politikalar Üzerine</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-date">7 Eylül 2025</div>
+        <div class="hero-card-title">Kuyu Tipi Hapishaneler: Tecrit ve Ruh Sağlığı</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span><strong>Etkinlik</strong> · Eleştirel Psikoloji Dersliği #3 — Aralık 2025</span>
+    <span><strong>Bildiri</strong> · 11. Yargı Paketi Taslağı ve Mesleki Etik</span>
+    <span><strong>Yayın</strong> · LGBTİ+'larla Çalışma Kılavuzu indirilebilir</span>
+    <span><strong>Duyuru</strong> · Meslek Yasası çalışmaları sürüyor</span>
+    <span><strong>Etkinlik</strong> · Eleştirel Psikoloji Dersliği #3 — Aralık 2025</span>
+    <span><strong>Bildiri</strong> · 11. Yargı Paketi Taslağı ve Mesleki Etik</span>
+    <span><strong>Yayın</strong> · LGBTİ+'larla Çalışma Kılavuzu indirilebilir</span>
+    <span><strong>Duyuru</strong> · Meslek Yasası çalışmaları sürüyor</span>
+  </div>
+</div>
+
+<section id="haberler">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0">
+      <div><span class="section-label">Güncel</span><h2 class="display">Haberler & <em>açıklamalar</em></h2></div>
+      <a class="read-more" href="#">Tümü</a>
+    </div>
+    <div class="news-layout">
+      <div class="news-big">
+        <div style="margin-bottom:0.75rem"><span class="news-tag">Bildiri</span><span class="news-big-date">23 Aralık 2025</span></div>
+        <h3>11. Yargı Paketi Taslağı, Biz Psikologlar İçin Hangi Anlamlara Geliyor?</h3>
+        <p>Bu taslak, psikologların "insan haklarına saygı ve savunuculuk", "ayrımcılıktan kaçınma", "eşitlik temelinde duyarlılık ve kültürel farkların gözetilmesi", "zarar vermeme ve özerkliği koruma" ile "bilimsel bilgi doğrultusunda çalışma" gibi temel mesleki yükümlülükler ve etik çerçeveyle doğrudan çelişmektedir.</p>
+        <a class="read-more" href="#">Devamını Oku</a>
+      </div>
+      <div class="news-small">
+        <span class="news-tag yellow">Rapor</span>
+        <div class="news-small-date">29 Ekim 2025</div>
+        <h4>Son Dönemlerde Artan LGBTİ+ ve Toplumsal Cinsiyet Eşitliğine Karşı Politikalar</h4>
+        <p>11. Yargı Paketi taslağına göre "doğuşta atanan cinsiyete aykırı" davranışlara üç yıla kadar hapis öngörülüyor.</p>
+        <a class="read-more" href="#">Oku</a>
+      </div>
+      <div class="news-small">
+        <span class="news-tag green">Savunuculuk</span>
+        <div class="news-small-date">7 Eylül 2025</div>
+        <h4>Kuyu Tipi Hapishaneler: Tecrit İnsan Haklarını ve Ruh Sağlığını Tehdit Ediyor</h4>
+        <p>Hapishanelerde yaşanan hak ihlallerini görünür kılmak mesleki ve toplumsal bir sorumluluktur.</p>
+        <a class="read-more" href="#">Oku</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="birimler" style="background:#fdf0e8;padding-top:4rem;padding-bottom:4rem">
+  <div class="container">
+    <span class="section-label">Yapı</span>
+    <h2 class="display">Birimler & <em>komisyonlar</em></h2>
+    <div class="birimler-wrap">
+      <div class="birimler-grid">
+        <div class="birim-card">
+          <span class="birim-num">01</span>
+          <h3>Psikolog Hakları Danışma Birimi</h3>
+          <p>Psikologların mesleki ve hukuki haklarını korumak için danışmanlık ve savunuculuk yapar.</p>
+        </div>
+        <div class="birim-card">
+          <span class="birim-num">02</span>
+          <h3>Kadın Komisyonu</h3>
+          <p>Feminist psikoloji perspektifinden toplumsal cinsiyet eşitliği için çalışır.</p>
+        </div>
+        <div class="birim-card">
+          <span class="birim-num">03</span>
+          <h3>Meslek Yasası Komisyonu</h3>
+          <p>Psikologlar için yasal güvence sağlayacak meslek yasası çıkarılması için mücadele eder.</p>
+        </div>
+        <div class="birim-card">
+          <span class="birim-num">04</span>
+          <h3>Öğrenci Komisyonu</h3>
+          <p>Psikoloji öğrencilerini kolektif öğrenme ve mesleki dayanışma etrafında bir araya getirir.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="etkinlikler">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end">
+      <div><span class="section-label">Takvim</span><h2 class="display">Etkinlikler & <em>duyurular</em></h2></div>
+      <a class="read-more" href="#">Tümü</a>
+    </div>
+    <div class="etkinlik-list">
+      <a class="etkinlik-item" href="#">
+        <div class="etk-date"><div class="etk-day">12</div><div class="etk-month">Ara</div></div>
+        <div><div class="etk-cat">Eğitim</div><div class="etk-title">Eleştirel Psikoloji Dersliği #3 — 10 haftalık kolektif öğrenme programı. Okumalar, tartışmalar, atölye çalışmaları.</div></div>
+        <div class="etk-arrow">›</div>
+      </a>
+      <a class="etkinlik-item" href="#">
+        <div class="etk-date"><div class="etk-day">01</div><div class="etk-month">May</div></div>
+        <div><div class="etk-cat">Eylem</div><div class="etk-title">1 Mayıs'ta Alanlardayız — Emekçi psikologlar olarak iş güvencesi ve özgür çalışma hakkı için</div></div>
+        <div class="etk-arrow">›</div>
+      </a>
+      <a class="etkinlik-item" href="#">
+        <div class="etk-date"><div class="etk-day">—</div><div class="etk-month">2025</div></div>
+        <div><div class="etk-cat">Sempozyum</div><div class="etk-title">Eleştirel Psikoloji Sempozyumu — Yıllık buluşma, bildiri çağrısı yakında</div></div>
+        <div class="etk-arrow">›</div>
+      </a>
+      <a class="etkinlik-item" href="#">
+        <div class="etk-date"><div class="etk-day">03</div><div class="etk-month">Tem</div></div>
+        <div><div class="etk-cat">Hukuk</div><div class="etk-title">Yönetmeliğe Karşı Emeğimizi Savunduk — Serbest meslek hakkında yürütme kısmen durduruldu</div></div>
+        <div class="etk-arrow">›</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:2rem;padding-bottom:4rem">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-cell"><span class="stat-n">2007</span><div class="stat-l">Kuruluş yılı</div></div>
+      <div class="stat-cell"><span class="stat-n">4</span><div class="stat-l">Aktif komisyon</div></div>
+      <div class="stat-cell"><span class="stat-n">2</span><div class="stat-l">Süreli yayın</div></div>
+      <div class="stat-cell"><span class="stat-n">100+</span><div class="stat-l">Etkinlik & faaliyet</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="yayinlar" style="padding-top:2rem">
+  <div class="container">
+    <span class="section-label">Bilgi & Üretim</span>
+    <h2 class="display">Yayınlar & <em>kaynaklar</em></h2>
+    <div class="pub-grid">
+      <a class="pub-card" href="http://elestirelpsikolojibulteni.todap.org/" target="_blank">
+        <div class="pub-tag">Bülten</div>
+        <h3>Eleştirel Psikoloji Bülteni</h3>
+        <p>Psikoloji pratiğine eleştirel bir gözle bakan süreli yayınımız.</p>
+      </a>
+      <a class="pub-card" href="http://psikolojivetoplum.todap.org/" target="_blank">
+        <div class="pub-tag">Dergi</div>
+        <h3>Psikoloji ve Toplum Bülteni</h3>
+        <p>Psikoloji ile toplumsal meseleler arasındaki köprüyü kuran bülten.</p>
+      </a>
+      <a class="pub-card" href="https://todap.org/images/raporlar_brosurler/psikologlar_icin_lgbtilerle_calisma_kilavuzu_TODAP.pdf" target="_blank">
+        <div class="pub-tag">Kılavuz</div>
+        <h3>LGBTİ+'larla Çalışma Kılavuzu</h3>
+        <p>Psikologlar için hazırlanmış kapsamlı uygulama rehberi.</p>
+      </a>
+      <a class="pub-card" href="https://todap.org/images/raporlar_brosurler/MeslekYasasiDosyasi.pdf" target="_blank">
+        <div class="pub-tag">Dosya</div>
+        <h3>Meslek Yasası Önerisi</h3>
+        <p>TODAP'ın kapsamlı meslek yasası önerisi ve gerekçe raporu.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:3rem">
+  <div class="container">
+    <div class="cta-section">
+      <div>
+        <h2>Toplumcu psikoloji için<br><em>seninle daha güçlüyüz</em></h2>
+        <p>Üye ol, toplantılara katıl, yayınlarımıza katkı sağla. Burada olmak bir tercihtir.</p>
+      </div>
+      <div class="cta-btns">
+        <a class="btn-white" href="#">Üyelik Başvurusu</a>
+        <a class="btn-outline-white" href="#iletisim" style="margin-top:0">İletişime Geç</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="iletisim">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">TODAP</span>
+      <p>Toplumcu Psikologlar Derneği.<br>Emek, eşitlik ve dayanışma değerleriyle<br>Türkiye'de faaliyet gösteriyoruz.</p>
+    </div>
+    <div class="footer-col"><h4>Kurumsal</h4><ul>
+      <li><a href="#">TODAP Kimdir</a></li>
+      <li><a href="#">Tüzük</a></li>
+      <li><a href="#">Etik Kurullar</a></li>
+      <li><a href="#">Faaliyet Listeleri</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Birimler</h4><ul>
+      <li><a href="#">Psikolog Hakları Birimi</a></li>
+      <li><a href="#">Kadın Komisyonu</a></li>
+      <li><a href="#">Meslek Yasası Komisyonu</a></li>
+      <li><a href="#">Öğrenci Komisyonu</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul>
+      <li><a href="#"><span class="__cf_email__" data-cfemail="771e1b12031e041e1a37031813160759180510">[email&#160;protected]</span></a></li>
+      <li><a href="https://twitter.com/todapder" target="_blank">@todapder</a></li>
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">İletişim Formu</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 TODAP — Toplumcu Psikologlar D

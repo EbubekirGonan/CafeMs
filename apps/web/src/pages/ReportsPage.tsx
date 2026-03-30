@@ -173,7 +173,7 @@ export const ReportsPage = () => {
                           Aylık Gelir
                         </Typography>
                         <Typography variant="h5" sx={{ mb: 1 }}>
-                          ₺{revenueReport?.totalRevenue.toFixed(2)}
+                          ₺{Number(revenueReport?.totalRevenue).toFixed(2)}
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
                           {revenueReport?.transactionCount} işlem
@@ -195,7 +195,7 @@ export const ReportsPage = () => {
                           Aylık Gider
                         </Typography>
                         <Typography variant="h5" sx={{ mb: 1 }}>
-                          ₺{expenseReport?.totalExpenses.toFixed(2)}
+                          ₺{Number(expenseReport?.totalExpenses).toFixed(2)}
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
                           {expenseReport?.expenseCount} gider
@@ -223,7 +223,7 @@ export const ReportsPage = () => {
                             color: profitReport?.isProfit ? '#4caf50' : '#f44336',
                           }}
                         >
-                          ₺{profitReport?.netProfit.toFixed(2)}
+                          ₺{Number(profitReport?.netProfit).toFixed(2)}
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
                           {profitReport?.isProfit ? 'Kârlı' : 'Zararlı'}
@@ -285,7 +285,7 @@ export const ReportsPage = () => {
                         {Object.entries(expenseReport.byCategory).map(([category, amount]: [string, any]) => (
                           <TableRow key={category}>
                             <TableCell>{category}</TableCell>
-                            <TableCell align="right">₺{amount.toFixed(2)}</TableCell>
+                            <TableCell align="right">₺{Number(amount).toFixed(2)}</TableCell>
                             <TableCell align="right">
                               {expenseReport.totalExpenses > 0
                                 ? ((amount / expenseReport.totalExpenses) * 100).toFixed(1)
@@ -324,10 +324,10 @@ export const ReportsPage = () => {
                           return (
                             <TableRow key={idx}>
                               <TableCell>{months[trend.month - 1]?.label} {trend.year}</TableCell>
-                              <TableCell align="right">₺{trend.revenue.toFixed(2)}</TableCell>
-                              <TableCell align="right">₺{trend.expenses.toFixed(2)}</TableCell>
+                              <TableCell align="right">₺{Number(trend.revenue).toFixed(2)}</TableCell>
+                              <TableCell align="right">₺{Number(trend.expenses).toFixed(2)}</TableCell>
                               <TableCell align="right" sx={{ color: netProfit >= 0 ? '#4caf50' : '#f44336' }}>
-                                ₺{netProfit.toFixed(2)}
+                                ₺{Number(netProfit).toFixed(2)}
                               </TableCell>
                             </TableRow>
                           );
@@ -353,7 +353,7 @@ export const ReportsPage = () => {
                           Toplam Yıllık Gelir
                         </Typography>
                         <Typography variant="h6">
-                          ₺{yearlyReport.totalRevenue?.toFixed(2) || '0.00'}
+                          ₺{Number(yearlyReport.totalRevenue).toFixed(2)}
                         </Typography>
                       </Box>
                     </Grid>
@@ -363,7 +363,7 @@ export const ReportsPage = () => {
                           Toplam Yıllık Gider
                         </Typography>
                         <Typography variant="h6">
-                          ₺{yearlyReport.totalExpenses?.toFixed(2) || '0.00'}
+                          ₺{Number(yearlyReport.totalExpenses).toFixed(2)}
                         </Typography>
                       </Box>
                     </Grid>
@@ -386,7 +386,7 @@ export const ReportsPage = () => {
                               : '#f44336',
                           }}
                         >
-                          ₺{((yearlyReport.totalRevenue || 0) - (yearlyReport.totalExpenses || 0)).toFixed(2)}
+                          ₺{Number((yearlyReport.totalRevenue || 0) - (yearlyReport.totalExpenses || 0)).toFixed(2)}
                         </Typography>
                       </Box>
                     </Grid>

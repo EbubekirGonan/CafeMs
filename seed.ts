@@ -18,20 +18,39 @@ async function main() {
 
   console.log('✅ Test kullanıcısı oluşturuldu: admin@cafems.com / admin123');
 
-  // 2. Başlangıç Masalarını Oluşturma
+  // 2. Mekan Bölümleri Oluşturma
+  const venueSections = [
+    { name: 'Giriş' },
+    { name: 'Ara Bölüm' },
+    { name: 'Bahçe Bölümü' },
+  ];
+
+  const createdSections: any[] = [];
+  for (const section of venueSections) {
+    const created = await prisma.venueSection.upsert({
+      where: { name: section.name },
+      update: {},
+      create: section,
+    });
+    createdSections.push(created);
+  }
+
+  console.log(`✅ ${createdSections.length} adet mekan bölümü sisteme eklendi.`);
+
+  // 3. Başlangıç Masalarını Oluşturma
   const initialTables = [
-    { number: 1, capacity: 2 },
-    { number: 2, capacity: 2 },
-    { number: 3, capacity: 4 },
-    { number: 4, capacity: 4 },
-    { number: 5, capacity: 6 },
-    { number: 6, capacity: 8 },
+    { number: 1, capacity: 2, venueSectionId: createdSections[0].id },
+    { number: 2, capacity: 2, venueSectionId: createdSections[0].id },
+    { number: 3, capacity: 4, venueSectionId: createdSections[1].id },
+    { number: 4, capacity: 4, venueSectionId: createdSections[1].id },
+    { number: 5, capacity: 6, venueSectionId: createdSections[2].id },
+    { number: 6, capacity: 8, venueSectionId: createdSections[2].id },
   ];
 
   for (const table of initialTables) {
     await prisma.table.upsert({
       where: { number: table.number },
-      update: {},
+      update: { venueSectionId: table.venueSectionId },
       create: table,
     });
   }

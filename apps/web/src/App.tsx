@@ -10,10 +10,10 @@ import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { useAuthStore } from './features/auth/store';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { ProductsPage } from './features/products/ProductsPage';
-import { OrdersPage } from './features/orders/OrdersPage';
-import { ExpensesPage } from './features/expenses/ExpensesPage';
-import { ReportsPage } from './features/reports/ReportsPage';
+import { ProductsPage } from './pages/ProductsPage';
+import { OrdersPage } from './pages/OrdersPage';
+import { ExpensesPage } from './pages/ExpensesPage';
+import { ReportsPage } from './pages/ReportsPage';
 import { MainLayout } from './components/MainLayout';
 
 const theme = createTheme({
@@ -50,12 +50,12 @@ function AppRoutes() {
   return (
     <MainLayout>
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/" element={<Navigate to="/orders" />} />
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/expenses" element={<ExpensesPage />} />
         <Route path="/reports" element={<ReportsPage />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/orders" />} />
       </Routes>
     </MainLayout>
   );
